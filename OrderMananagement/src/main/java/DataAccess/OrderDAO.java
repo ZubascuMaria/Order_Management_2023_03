@@ -186,4 +186,31 @@ public class OrderDAO {
         }
         return orders;
     }
+    public static ArrayList<Orders> getList()
+    {
+        Connection dbConnection = ConnectionFactory.getConnection();
+
+        PreparedStatement insertStatement = null;
+        ArrayList<Orders> arr=new ArrayList<>();
+        try {
+            insertStatement = dbConnection.prepareStatement(viewStatementString, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = null;
+            rs=insertStatement.executeQuery();
+            while(rs.next())
+            {
+                int OID=rs.getInt("OID");
+                int cantitate=rs.getInt("cantitate");
+                int CID=rs.getInt("CID");
+                int PID=rs.getInt("PID");
+                arr.add(new Orders(OID,cantitate,CID,PID));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "OrderDAO:getList " + e.getMessage());
+        } finally {
+            ConnectionFactory.close(insertStatement);
+            ConnectionFactory.close(dbConnection);
+        }
+        return arr;
+    }
 }

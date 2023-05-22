@@ -209,6 +209,33 @@ public class ProductDAO {
         }
         return pro;
     }
+    public static ArrayList<Product> getList()
+    {
+        Connection dbConnection = ConnectionFactory.getConnection();
+
+        PreparedStatement insertStatement = null;
+        ArrayList<Product> arr=new ArrayList<>();
+        try {
+            insertStatement = dbConnection.prepareStatement(viewStatementString, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = null;
+            rs=insertStatement.executeQuery();
+            while(rs.next())
+            {
+                int PID=rs.getInt("PID");
+                String nume=rs.getString("numeProdus");
+                int pret=rs.getInt("pret");
+                int stoc=rs.getInt("stoc");
+                arr.add(new Product(PID,nume,pret,stoc));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "ProductDAO:getList " + e.getMessage());
+        } finally {
+            ConnectionFactory.close(insertStatement);
+            ConnectionFactory.close(dbConnection);
+        }
+        return arr;
+    }
 
 
 }

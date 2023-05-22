@@ -2,95 +2,72 @@ package Presentation;
 
 import Connection.ReflectionClass;
 import DataAccess.ClientDAO;
+import DataAccess.OrderDAO;
 import DataAccess.ProductDAO;
-import Model.Client;
-import Model.Orders;
-import Model.Product;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class View {
     /**
-     * @param listaClienti
+     * @param
      * @return
      * Aceasta metoda creeaza un tabel care contine toti clientii din baza de date
      */
-    public JTable viewClient(ArrayList<Client> listaClienti)
-    {
+    public static JTable getTable(ArrayList<?> list){
         DefaultTableModel modelc=new DefaultTableModel();
-        modelc.addColumn("ID");
-        modelc.addColumn("Nume");
-        modelc.addColumn("Adresa");
-        modelc.addColumn("Contact");
-        for(Client client:listaClienti)
+        ArrayList<Object> lista = ReflectionClass.retrieveProperties(list.get(1));
+        for(Object o: lista)
+            modelc.addColumn(o);
+        for (Object obj: list)
         {
-            Object[]values=new Object[4];
-            ReflectionClass.retrieveProperties(client);
-            values[0]=client.getCID();
-            values[1]=client.getNume();
-            values[2]=client.getAdresa();
-            values[3]=client.getContact();
-            modelc.addRow(values);
+            Object [] o=new Object[ReflectionClass.retrieveProperties(list.get(0)).size()];
+            int k=0;
+            for (Field field : obj.getClass().getDeclaredFields())
+            {
+                field.setAccessible(true);
+                try {
+                    o[k]=field.get(obj);
+                    k++;
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+            modelc.addRow(o);
         }
-        JTable table=new JTable(modelc);
-        return table;
+
+       return new JTable(modelc);
+    }
+    public static JTable viewClient()
+    {
+        return  getTable(ClientDAO.getList());
     }
 
     /**
      *
-     * @param listaProduse
+     * @param
      * @return
      * Aceasta metoda returneaza un tabel care contine toate produsele din baza de date
      */
-    public JTable viewProduct(ArrayList<Product> listaProduse)
+    public static JTable viewProduct()
     {
-        DefaultTableModel modelc=new DefaultTableModel();
-        modelc.addColumn("ID");
-        modelc.addColumn("Nume Produs");
-        modelc.addColumn("Pret");
-        modelc.addColumn("Stoc");
-        for(Product product:listaProduse)
-        {
-            Object[]values=new Object[4];
-            ReflectionClass.retrieveProperties(product);
-            values[0]=product.getPID();
-            values[1]=product.getNumeProdus();
-            values[2]=product.getPret();
-            values[3]=product.getStoc();
-            modelc.addRow(values);
-        }
-        JTable table=new JTable(modelc);
-        return table;
+        return getTable(ProductDAO.getList());
     }
 
     /**
      *
-     * @param listaOrd
+     * @param
      * @return
      * Aceasta metoda returneaza un tabel care contine toate comenzile din baza de date
      */
-    public JTable viewOrder(ArrayList<Orders> listaOrd)
+    public static JTable viewOrder()
     {
-        DefaultTableModel modelc=new DefaultTableModel();
-        modelc.addColumn("ID");
-        modelc.addColumn("Cantitate");
-        modelc.addColumn("Nume client");
-        modelc.addColumn("Nume Produs");
-        for(Orders order:listaOrd)
-        {
-            Object[]values=new Object[4];
-            ReflectionClass.retrieveProperties(order);
-            values[0]=order.getOID();
-            values[1]=order.getCantitate();
-            Product p= ProductDAO.findProductById(order.getPID());
-            Client c= ClientDAO.findClientById(order.getCID());
-            values[2]=c.getNume();
-            values[3]=p.getNumeProdus();
-            modelc.addRow(values);
-        }
-        JTable table=new JTable(modelc);
-        return table;
+
+        return getTable(OrderDAO.getList());
     }
 }

@@ -6,6 +6,11 @@ public class Client {
     private String adresa;
     private String contact;
 
+    public Client()
+    {
+
+    }
+
     public Client(Integer CID, String nume, String adresa, String contact) {
         this.CID = CID;
         this.nume = nume;

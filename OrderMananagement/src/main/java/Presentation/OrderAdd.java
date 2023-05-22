@@ -1,10 +1,8 @@
 package Presentation;
 
-import BusinessLogic.ClientBLL;
 import BusinessLogic.OrderBLL;
 import DataAccess.ClientDAO;
 import DataAccess.ProductDAO;
-import Model.Client;
 import Model.Orders;
 
 import javax.swing.*;

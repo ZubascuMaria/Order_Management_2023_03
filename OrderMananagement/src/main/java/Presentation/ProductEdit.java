@@ -1,6 +1,5 @@
 package Presentation;
 
-import BusinessLogic.ClientBLL;
 import BusinessLogic.ProductBLL;
 import DataAccess.ProductDAO;
 

@@ -43,10 +43,6 @@ public class StartInterface extends JFrame implements ActionListener {
         frame.add(order);
         order.addActionListener(this);
     }
-    public static void main(String[]args)
-    {
-        new StartInterface();
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -208,6 +208,33 @@ public class ClientDAO {
         }
         return cli;
     }
+    public static ArrayList<Client> getList()
+    {
+        Connection dbConnection = ConnectionFactory.getConnection();
+
+        PreparedStatement insertStatement = null;
+        ArrayList<Client> arr=new ArrayList<>();
+            try {
+                insertStatement = dbConnection.prepareStatement(viewStatementString, Statement.RETURN_GENERATED_KEYS);
+                ResultSet rs = null;
+                rs=insertStatement.executeQuery();
+                 while(rs.next())
+                {
+                    int CID=rs.getInt("CID");
+                    String nume=rs.getString("nume");
+                    String adresa=rs.getString("adresa");
+                    String contact=rs.getString("contact");
+                    arr.add(new Client(CID,nume,adresa,contact));
+                }
+
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, "ClientDAO:getList " + e.getMessage());
+            } finally {
+                ConnectionFactory.close(insertStatement);
+                ConnectionFactory.close(dbConnection);
+            }
+            return arr;
+    }
 
 
 }

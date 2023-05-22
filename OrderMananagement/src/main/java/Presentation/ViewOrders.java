@@ -1,19 +1,11 @@
 package Presentation;
 
-import DataAccess.ClientDAO;
-import DataAccess.OrderDAO;
-import Model.Client;
-import Model.Orders;
-
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class ViewOrders extends JFrame {
     public ViewOrders()
     {
-        ArrayList<Orders> arr= OrderDAO.viewAllOrders();
-        View v=new View();
-        JTable table=v.viewOrder(arr);
+        JTable table=View.viewOrder();
         JScrollPane scrollPane=new JScrollPane(table);
         this.add(scrollPane);
         this.setTitle("All Orders");
