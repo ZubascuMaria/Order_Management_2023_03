@@ -216,8 +216,7 @@ public class ClientDAO {
         ArrayList<Client> arr=new ArrayList<>();
             try {
                 insertStatement = dbConnection.prepareStatement(viewStatementString, Statement.RETURN_GENERATED_KEYS);
-                ResultSet rs = null;
-                rs=insertStatement.executeQuery();
+                ResultSet rs=insertStatement.executeQuery();
                  while(rs.next())
                 {
                     int CID=rs.getInt("CID");
